@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { verifyToken } from '../middlewares/AuthMiddleware.js';
-import { getMessages } from '../controllers/MessagesController.js';
+import { getMessages, } from '../controllers/MessagesController.js';
 import multer from "multer"
 
 const messagesRoutes = Router();
