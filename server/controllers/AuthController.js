@@ -125,7 +125,7 @@ export const addProfileImage = async (request, response, next) => {
 export const removeProfileImage = async (request, response, next) => {
     try {
         const { userId } = request;
-        const user = User.findById(userId);
+        const user = await User.findById(userId);
         const userData = await User.findById(userId)
 
         if (!user) {
