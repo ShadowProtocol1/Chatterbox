@@ -10,12 +10,16 @@ import { apiClient } from "@/lib/api-client"
 import { useAppStore } from "@/store"
 import Lottie from "react-lottie"
 import { animationDefaultOptions, getColor } from "@/lib/utils"
+import { LoadingScreen } from "@/components/loading-screen"
 
 const NewDm = () => {
     const { setSelectedChatType, setSelectedChatData } = useAppStore()
     const [openNewContactModal, setOpenNewContactModal] = useState(false)
     const [searchedContacts, setSearchedContacts] = useState([])
+    const [isSearching, setIsSearching] = useState(false)
+
     const searchContacts = async (searchTerm) => {
+        setIsSearching(true)
         try {
             if (searchTerm.length > 0) {
                 const response = await apiClient.post(SEARCH_CONTACTS_ROUTES, { searchTerm }, { withCredentials: true })
@@ -30,6 +34,8 @@ const NewDm = () => {
             }
         } catch (error) {
             console.log(error)
+        } finally {
+            setIsSearching(false)
         }
     }
 
@@ -41,20 +47,19 @@ const NewDm = () => {
     }
     return (<>
         <TooltipProvider>
-            <Tooltip>
-                <TooltipTrigger>
-                    <FaPlus className="text-neutral-400 font-light text-opacity-90 text-start hover:text-neutral-100 cursor-pointer transition-all duration-300" onClick={() => setOpenNewContactModal(true)} />
+            <Tooltip>                <TooltipTrigger>
+                    <FaPlus className="text-muted-foreground font-light text-opacity-90 text-start hover:text-foreground cursor-pointer transition-all duration-300" onClick={() => setOpenNewContactModal(true)} />
                 </TooltipTrigger>
-                <TooltipContent className="bg-[#1c1b1e] border-none mb-2 p-3 text-white">Select New Contact</TooltipContent>
+                <TooltipContent className="bg-popover border-border mb-2 p-3 text-popover-foreground">Select New Contact</TooltipContent>
             </Tooltip>
         </TooltipProvider>        <Dialog open={openNewContactModal} onOpenChange={setOpenNewContactModal}>
-            <DialogContent className="bg-[#181920] border-none text-white w-[350px] h-[350px] flex flex-col">
+            <DialogContent className="bg-popover border-border text-popover-foreground w-[350px] h-[350px] flex flex-col">
                 <DialogHeader>
                     <DialogTitle>Please select a contact</DialogTitle>
                     <DialogDescription></DialogDescription>
                 </DialogHeader>
                 <div>
-                    <Input placeholder="Search Contacts" className="rounded-lg p-6 bg-[#2c2e3b] border-none" onChange={e => searchContacts(e.target.value)} />
+                    <Input placeholder="Search Contacts" className="rounded-lg p-6 bg-input border-border" onChange={e => searchContacts(e.target.value)} />
                 </div>
                 {searchedContacts.length > 0 && (
                     <ScrollArea className="h-[250px]">
@@ -73,14 +78,14 @@ const NewDm = () => {
                                                             : contact.email.split("").shift()}
                                                     </div>
                                                 )}
-                                            </Avatar>
+                                            </Avatar>                                        </div>                                        <div className="flex flex-col">
+                                            <span className="text-popover-foreground">
+                                                {contact.firstName && contact.lastName
+                                                    ? `${contact.firstName} ${contact.lastName}`
+                                                    : contact.email}
+                                            </span>
+                                            <span className="text-xs text-muted-foreground">{contact.email}</span>
                                         </div>
-                                        <span className="flex flex-col">
-                                            {contact.firstName && contact.lastName
-                                                ? `${contact.firstName} ${contact.lastName}`
-                                                : contact.email}
-                                        </span>
-                                        <span className="text-xs">{contact.email}</span>
                                     </div>
                                 )}
                         </div>
@@ -92,10 +97,9 @@ const NewDm = () => {
                             isClickToPauseDisabled={true}
                             height={100}
                             width={100}
-                            options={animationDefaultOptions} />
-                        <div className="text-opacity-80 text-white flex flex-col gap-5 items-center mt-10 lg:text-2xl text-xl transition-all duration-300 text-center">
+                            options={animationDefaultOptions} />                        <div className="text-opacity-80 text-popover-foreground flex flex-col gap-5 items-center mt-10 lg:text-2xl text-xl transition-all duration-300 text-center">
                             <h3 className="poppins-medium">
-                                Hi <span className="text-purple-500">!</span>Search new
+                                Hi <span className="text-purple-500">!</span> Search new{" "}
                                 <span className="text-purple-500">Contact.</span>
                             </h3>
                         </div>

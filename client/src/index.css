@@ -10,13 +10,19 @@
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  --radius: 0.625rem;
+}
+
+/* Light mode (default) */
+:root,
+.light {
+  color: rgba(13, 13, 13, 0.87);
+  background-color: #ffffff;
+  
   --background: 0 0% 100%;
   --foreground: 224 71.4% 4.1%;
   --card: 0 0% 100%;
@@ -41,7 +47,6 @@
   --chart-3: 197 37% 24%;
   --chart-4: 43 74% 66%;
   --chart-5: 27 87% 67%;
-  --radius: 0.625rem;
   --sidebar: 210 20% 98%;
   --sidebar-foreground: 224 71.4% 4.1%;
   --sidebar-primary: 220.9 39.3% 11%;
@@ -50,6 +55,18 @@
   --sidebar-accent-foreground: 220.9 39.3% 11%;
   --sidebar-border: 220 13% 91%;
   --sidebar-ring: 224 71.4% 4.1%;
+  
+  /* Chatterbox specific light colors */
+  --chatterbox-bg: 0 0% 98%;
+  --chatterbox-surface: 0 0% 100%;
+  --chatterbox-surface-elevated: 0 0% 100%;
+  --chatterbox-text: 224 71.4% 4.1%;
+  --chatterbox-text-muted: 220 8.9% 46.1%;
+  --chatterbox-border: 220 13% 91%;
+  --chatterbox-accent: 262 100% 58%;
+  --chatterbox-accent-muted: 262 100% 96%;
+  --chatterbox-sidebar: 220 14.3% 95.9%;
+  --chatterbox-input: 220 13% 91%;
 }
 
 
@@ -67,6 +84,9 @@
 }
 
 .dark {
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #1b1c24;
+  
   --background: 224 71.4% 4.1%;
   --foreground: 210 20% 98%;
   --card: 224 71.4% 4.1%;
@@ -99,14 +119,77 @@
   --sidebar-accent-foreground: 210 20% 98%;
   --sidebar-border: 215 27.9% 16.9%;
   --sidebar-ring: 216 12.2% 83.9%;
+  
+  /* Chatterbox specific dark colors */
+  --chatterbox-bg: 224 71.4% 4.1%;
+  --chatterbox-surface: 215 27.9% 16.9%;
+  --chatterbox-surface-elevated: 215 27.9% 18.9%;
+  --chatterbox-text: 210 20% 98%;
+  --chatterbox-text-muted: 217.9 10.6% 64.9%;
+  --chatterbox-border: 215 27.9% 16.9%;
+  --chatterbox-accent: 262 100% 58%;
+  --chatterbox-accent-muted: 262 100% 8%;
+  --chatterbox-sidebar: 220.9 39.3% 11%;
+  --chatterbox-input: 215 27.9% 16.9%;
 }
 
 @layer base {
   * {
     @apply border-border;
   }
+  
+  html {
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
   body {
     @apply bg-background text-foreground;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  /* Enhanced theme transition */
+  .theme-transitioning * {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, fill 0.3s ease !important;
+  }
+  
+  /* Theme overlay for expanding animation */
+  .theme-overlay {
+    will-change: width, height;
+    backface-visibility: hidden;
+  }
+  
+  /* Theme container for masking effect */
+  .theme-container {
+    will-change: clip-path;
+    backface-visibility: hidden;
+  }
+  
+  .theme-mask {
+    will-change: width, height;
+    backface-visibility: hidden;
+  }
+  
+  /* Prevent scrollbar issues during animation */
+  body.theme-animating {
+    overflow: hidden;
+  }
+  
+  /* Add smooth transitions for all themed elements */
+  *[class*="bg-"], 
+  *[class*="text-"], 
+  *[class*="border-"],
+  .bg-background,
+  .bg-popover,
+  .bg-card,
+  .bg-primary,
+  .bg-secondary,
+  .bg-muted,
+  .bg-accent,
+  .text-foreground,
+  .text-muted-foreground,
+  .text-popover-foreground,
+  .border-border {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
   }
 }
 
@@ -176,4 +259,92 @@
 .backdrop-blur-custom {
   backdrop-filter: blur(8px) saturate(150%);
   -webkit-backdrop-filter: blur(8px) saturate(150%);
+}
+
+/* Theme-aware utility classes */
+.chatterbox-bg {
+  background-color: hsl(var(--chatterbox-bg));
+}
+
+.chatterbox-surface {
+  background-color: hsl(var(--chatterbox-surface));
+}
+
+.chatterbox-surface-elevated {
+  background-color: hsl(var(--chatterbox-surface-elevated));
+}
+
+.chatterbox-text {
+  color: hsl(var(--chatterbox-text));
+}
+
+.chatterbox-text-muted {
+  color: hsl(var(--chatterbox-text-muted));
+}
+
+.chatterbox-border {
+  border-color: hsl(var(--chatterbox-border));
+}
+
+.chatterbox-accent {
+  background-color: hsl(var(--chatterbox-accent));
+}
+
+.chatterbox-accent-text {
+  color: hsl(var(--chatterbox-accent));
+}
+
+.chatterbox-accent-muted {
+  background-color: hsl(var(--chatterbox-accent-muted));
+}
+
+.chatterbox-sidebar {
+  background-color: hsl(var(--chatterbox-sidebar));
+}
+
+.chatterbox-input {
+  background-color: hsl(var(--chatterbox-input));
+}
+
+/* Custom scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 10px;
+}
+
+/* Light theme scrollbar */
+:root ::-webkit-scrollbar-thumb,
+.light ::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 10px;
+}
+
+:root ::-webkit-scrollbar-thumb:hover,
+.light ::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+/* Dark theme scrollbar */
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.15) transparent;
+}
+
+.dark * {
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
 }

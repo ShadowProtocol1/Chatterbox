@@ -5,7 +5,7 @@ const Toaster = ({
 }) => {
   return (
     <Sonner
-      theme="dark"
+      theme="system"
       className="toaster group"
       toastOptions={{
         style: {

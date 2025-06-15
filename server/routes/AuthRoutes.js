@@ -12,6 +12,6 @@ authRouter.get('/user-info',verifyToken ,getUserInfo)
 authRouter.post('/update-profile', verifyToken, updateProfile);
 authRouter.post('/add-profile-image', verifyToken, upload.single("profile-image"),addProfileImage);
 authRouter.delete('/remove-profile-image', verifyToken, removeProfileImage);
-authRouter.post('/logout',logOut);
+authRouter.post('/logout', verifyToken, logOut);
 
 export default authRouter;

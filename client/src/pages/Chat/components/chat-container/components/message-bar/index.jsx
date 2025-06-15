@@ -2,11 +2,12 @@ import { useEffect, useRef, useState, lazy, Suspense } from "react"
 import { GrAttachment } from "react-icons/gr"
 import { RiEmojiStickerLine } from "react-icons/ri"
 import { IoSend } from "react-icons/io5"
-import { useSocket } from "../../../../../../../context/SocketContext"
+import { useSocket } from "@/context/SocketContext"
 import { useAppStore } from "@/store"
 import { apiClient } from "@/lib/api-client"
 import { UPLOAD_FILE_ROUTE } from "@/utils/constants"
 import { useEmojiPicker } from "@/hooks/useEmojiPicker"
+import { useTheme } from "@/context/ThemeContext"
 
 // Lazy load the emoji picker to reduce initial bundle size
 const EmojiPicker = lazy(() => import("emoji-picker-react"))
@@ -15,6 +16,7 @@ const MessageBar = () => {
     const fileInputRef = useRef()
     const socket = useSocket()
     const { selectedChatType, selectedChatData, setIsUploading, setFileUploadProgress, userInfo } = useAppStore()
+    const { isDark } = useTheme()
     const [message, setMessage] = useState("")
       // Use optimized emoji picker hook
     const {
@@ -98,12 +100,12 @@ const MessageBar = () => {
         } catch (error) {
             console.log(error)
         }
-    }
-    return <div className="h-[10vh] bg-[#1c1d25] flex justify-center items-center px-40 mb-6 gap-6">
-        <div className="flex-1 flex bg-[#2a2b33] rounded-md items-center gap-5 pr-5">
+    }    
+    return <div className="h-10 bg-card border-t border-border flex justify-center items-center px-40 mb-6 gap-6">
+        <div className="flex-1 flex bg-input rounded-md items-center gap-5 pr-5 mt-6">
             <input
                 type="text"
-                className="flex-1 p-3 bg-transparent rounded-md focus:border-none focus:outline-none"
+                className="flex-1 p-3 bg-transparent text-foreground rounded-md focus:border-none focus:outline-none placeholder:text-muted-foreground"
                 placeholder="Enter Message"
                 value={message}
                 onChange={e => setMessage(e.target.value)}
@@ -113,13 +115,13 @@ const MessageBar = () => {
                     }
                 }}
             />
-            <button className="text-neutral-500 focus:border-none focus:outline-none focus:text-white duration-300 transition-all" onClick={handleAttachmentClick}>
+            <button className="text-muted-foreground focus:border-none focus:outline-none hover:text-foreground duration-300 transition-all" onClick={handleAttachmentClick}>
                 <GrAttachment className="text-2xl" />
             </button>
             <input type="file" className="hidden" ref={fileInputRef} onChange={handleAttachmentChange} />            <div className="relative flex">
                 <button 
                     ref={emojiButtonRef}
-                    className="focus:border-none focus:outline-none text-neutral-500 focus:text-white duration-300 transition-all" 
+                    className="focus:border-none focus:outline-none text-muted-foreground hover:text-foreground duration-300 transition-all" 
                     onClick={toggleEmojiPicker}
                 >
                     <RiEmojiStickerLine className="text-2xl" />
@@ -127,12 +129,12 @@ const MessageBar = () => {
                 {emojiPickerOpen && (
                     <div className="absolute bottom-16 right-0" ref={emojiRef}>
                         <Suspense fallback={
-                            <div className="w-80 h-96 bg-[#2a2b33] rounded-lg border flex items-center justify-center">
+                            <div className="w-80 h-96 bg-popover rounded-lg border border-border flex items-center justify-center">
                                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-500"></div>
                             </div>
                         }>
                             <EmojiPicker 
-                                theme="dark" 
+                                theme={isDark ? "dark" : "light"} 
                                 open={emojiPickerOpen} 
                                 onEmojiClick={handleAddEmoji} 
                                 autoFocusSearch={false}
@@ -150,7 +152,7 @@ const MessageBar = () => {
                 )}
             </div>
         </div>
-        <button className="bg-[#8417ff] rounded-md items-center justify-center p-3 focus:border-none hover:bg-[#741bda] focus:bg-[#741bda] focus:outline-none focus:text-white duration-300 transition-all" onClick={handleSendMessage}>
+        <button className="bg-purple-600 hover:bg-purple-700 text-white rounded-md items-center justify-center p-3 focus:border-none focus:outline-none duration-300 transition-all mt-6" onClick={handleSendMessage}>
             <IoSend className="text-2xl" />
         </button>
     </div>

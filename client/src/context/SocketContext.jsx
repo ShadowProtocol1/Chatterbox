@@ -46,17 +46,8 @@ export const SocketProvider = ({ children }) => {
 
             socket.current.on("recieveMessage", handleReceiveMessage)
             socket.current.on("recieve-channel-message", handleReceiveChannelMessage)
-            
             return () => {
-                if (socket.current) {
-                    socket.current.disconnect()
-                }
-            }
-        } else {
-            // If userInfo is null/undefined (logged out), disconnect socket
-            if (socket.current) {
                 socket.current.disconnect()
-                socket.current = null
             }
         }
     }, [userInfo])

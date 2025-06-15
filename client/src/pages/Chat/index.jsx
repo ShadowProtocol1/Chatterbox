@@ -5,10 +5,13 @@ import { useAppStore } from "@/store"
 import ContactsConatiner from "../Chat/components/contacts-container"
 import EmptyChatConatiner from "./components/empty-container"
 import ChatContainer from "./components/chat-container"
+import { LoadingScreen } from "@/components/loading-screen"
+import { useTheme } from "@/context/ThemeContext"
 
 const Chat = () => {
 
     const { userInfo, selectedChatType, isUploading, isDownloading, fileUploadProgress, fileDownloadProgress } = useAppStore()
+    const { isDark } = useTheme()
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -17,28 +20,36 @@ const Chat = () => {
             navigate("/profile")
         }
     }, [userInfo, navigate])
-    return (
-        <div className="flex h-[100vh] text-white overflow-hidden ">
-            {
-                isUploading && <div className="h-[100vh] w-[100vw] fixed top-0 z-10 left-0 bg-black/80 flex items-center justify-center flex-gol gap-5 backdrop-blur-lg">
-                    <h5 className="text-5xl animate-pulse">Uploading File</h5>
-                    {fileUploadProgress}%
-                </div>
-            }
-            {
-                isDownloading && <div className="h-[100vh] w-[100vw] fixed top-0 z-10 left-0 bg-black/80 flex items-center justify-center flex-gol gap-5 backdrop-blur-lg">
-                    <h5 className="text-5xl animate-pulse">Downloading File</h5>
-                    {fileDownloadProgress}%
-                </div>
-            }
-            <ContactsConatiner />
-            {selectedChatType === undefined ? (
-                <EmptyChatConatiner />
-            ) : (
-                <ChatContainer />
+
+    return (<div className="flex h-[100vh] text-foreground bg-background overflow-hidden ">
+        {
+            isUploading && (
+                <LoadingScreen
+                    message={`Uploading File (${fileUploadProgress}%)`}
+                    overlay={true}
+                    loaderType="pulse"
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-lg"
+                />
             )
-            }
-        </div>
+        }
+        {
+            isDownloading && (
+                <LoadingScreen
+                    message={`Downloading File (${fileDownloadProgress}%)`}
+                    overlay={true}
+                    loaderType="pulse"
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-lg"
+                />
+            )
+        }
+        <ContactsConatiner />
+        {selectedChatType === undefined ? (
+            <EmptyChatConatiner />
+        ) : (
+            <ChatContainer />
+        )
+        }
+    </div>
     )
 }
 
