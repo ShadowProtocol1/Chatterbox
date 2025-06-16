@@ -4,6 +4,17 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Custom text selection styles */
+::selection {
+  background-color: #a855f7; /* Purple-500 */
+  color: white;
+}
+
+::-moz-selection {
+  background-color: #a855f7; /* Purple-500 */
+  color: white;
+}
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
